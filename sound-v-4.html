@@ -1,0 +1,74 @@
+
+<!doctype html>
+<head>
+	<title>BH Web Audio 4th</title>
+	<script src="./soundV.js"></script>
+	<style>
+		html,body,div,img{margin:0; padding:0;}
+		/*이번엔 이미지를 넣어보겠습니다!!*/
+		/*동그란 이미지를 쓸 것이라 Border-radius는 지웠습니다 필요없음!!*/
+		.circle{ width:200px; height:200px; background:white;
+			position: absolute; left:calc(50% - 100px); top:200px;
+			animation: Moving 8s linear infinite;
+			/*애니메이션이름 Moving 8초동안 가속도없이 일정한 속도로 infinite(무한반복) 빙글빙글 돌아가게 해볼께요!!*/
+		}
+		@keyframes Moving{
+			0%{ }
+			100%{ transform: rotate(-360deg)}
+		}
+		.circle img{width:200%; height:auto;}
+	</style>
+</head>
+<body>
+	<button id="stopBut">stop</button>
+	<button id="playBut">play</button>
+	<button id="pauseBut">pause</button>&nbsp;&nbsp;&nbsp;
+	
+	<!-- 곡을 버튼으로 선택해볼께요 -->
+	<button id="play1">달리기</button>
+	<button id="play2">캐롤</button>
+	<!-- 이 버튼에 대한 스크립트는 끝에 있어요 -->
+	<input id="audio_file" type="file" accept="audio/*" />
+
+	<div class="circle" id="circle">
+		<img src="tree.gif" id="cImg">
+		<!-- 자 이렇게 이미지가 들어갔죠? 이름도 cImg로 붙였어요~-->
+	</div>
+
+	<script>
+		var newSound = new SoundBH("running.mp3",16);
+	
+		(function loop(){ 
+ 
+			var vol = newSound.getGain() / 10; 
+			circle.style.width = vol + "px";
+			circle.style.height = vol + "px";
+			circle.style.borderRadius = vol/2 + "px";
+			circle.style.left = "calc(50% - " + (vol/2) + "px)";
+			circle.style.top = 300 - (vol/2) + "px";
+
+			window.requestAnimationFrame(loop);	
+		})();
+
+		playBut.onclick = function(){ newSound.play();};	
+		stopBut.onclick = function(){ newSound.stop();};
+		pauseBut.onclick = function(){ newSound.pause();};
+		audio_file.onchange = function(){
+		  	newSound.change(URL.createObjectURL(this.files[0]));
+		};
+
+		//자 곡이름 버튼을 누르면
+		play1.onclick = function(){
+			//먼저 이미지 파일명을 바꾸고
+			cImg.setAttribute("src","tree.gif");
+			//사운드도 바꿔서 재생~~
+			newSound.change("running.mp3");
+		};
+		
+		play2.onclick = function(){ 
+			cImg.setAttribute("src","lp.png");
+			newSound.change("wwa.mp3");
+		};
+
+	</script>
+</body>
